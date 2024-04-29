@@ -17,12 +17,12 @@ public class Retiro {
     private LocalDateTime fechaRetiro;
     private Integer heladeraId;
 
-    public Retiro(Long id, String qrVianda, String tarjeta, Integer heladeraID){
+    public Retiro(Long id, String qrVianda, String tarjeta, Integer heladeraId){
         this.id = id;
         this.qrVianda = qrVianda;
         this.tarjeta = tarjeta;
         this.fechaRetiro = LocalDateTime.now();
-        this.heladeraId = heladeraID;
+        this.heladeraId = heladeraId;
     }
 
 }
