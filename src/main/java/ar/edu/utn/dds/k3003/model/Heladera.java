@@ -1,12 +1,21 @@
-package ar.edu.utn.dds.k3003.model.Heladera;
+package ar.edu.utn.dds.k3003.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
+
+@Getter
+@Setter
+@AllArgsConstructor
 public class Heladera {
 
-    private Integer heladeraId;
-    private PosicionHeladera posicionHeladera;
-    private ModeloHeladera modeloHeladera;
+    private Integer id;
+
+    // Se supone que una heladera tiene un nombre especial para reconocerla...
+    private String nombre;
 
     // ...Es por eso que para registrar la capacidad de las heladeras lo haremos en unidad de viandas.
     // Sin embargo el peso de las mismas puede variar como se aclaró en la sección correspondiente.
@@ -21,17 +30,14 @@ public class Heladera {
 
     // Ver como se instancia esto mas adelante
     public Heladera(
-            Integer heladeraId,
-            PosicionHeladera posicionHeladera,
-            ModeloHeladera modeloHeladera,
-            Integer cantidadDeViandas
+            Integer id,
+            String nombre
     ){
-        this.heladeraId = heladeraId;
-        this.posicionHeladera = posicionHeladera;
-        this.modeloHeladera = modeloHeladera;
-        this.cantidadDeViandas = cantidadDeViandas;
+        this.id = id;
+        this.nombre = nombre;
+        this.cantidadDeViandas = 0;
         this.fechaDeFuncionamiento = LocalDateTime.now();
-        this.estadoOperacional = true;
+        this.estadoOperacional = false;
         this.ultimaTemperaturaRegistrada = (float) 0;
     }
 
