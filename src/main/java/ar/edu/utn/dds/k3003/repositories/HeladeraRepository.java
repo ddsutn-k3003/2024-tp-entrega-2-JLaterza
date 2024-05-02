@@ -4,7 +4,6 @@ import ar.edu.utn.dds.k3003.model.Heladera;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class HeladeraRepository {
 
@@ -22,4 +21,12 @@ public class HeladeraRepository {
         }
         return heladera;
     }
+
+    public Heladera findById(Integer id) {
+        Optional<Heladera> first = this.heladeras.stream().filter(x -> x.getId().equals(id)).findFirst();
+        return first.orElseThrow(() -> new NoSuchElementException(
+                String.format("No hay una heladera de id: %s", id)
+        ));
+    }
+
 }

@@ -11,13 +11,22 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Temperatura {
 
+    private Integer id;
     private Integer temperatura;
     private Integer heladeraId;
     private LocalDateTime fechaMedicion;
 
     public Temperatura(Integer temperatura, Integer heladeraId){
+        this.id = null;
         this.temperatura = temperatura;
         this.heladeraId = heladeraId;
         this.fechaMedicion = LocalDateTime.now();
+    }
+
+    public Temperatura(Integer temperatura, Integer heladeraId, LocalDateTime fechaMedicion){
+        this.id = null;
+        this.temperatura = temperatura;
+        this.heladeraId = heladeraId;
+        this.fechaMedicion = fechaMedicion;
     }
 }
