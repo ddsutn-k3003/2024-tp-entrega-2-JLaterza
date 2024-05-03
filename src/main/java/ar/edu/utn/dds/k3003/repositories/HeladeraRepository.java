@@ -18,9 +18,25 @@ public class HeladeraRepository {
         if (Objects.isNull(heladera.getId())) {
             heladera.setId(seqId.getAndIncrement());
             this.heladeras.add(heladera);
+        } else {
+            Optional<Heladera> existingHeladera = this.heladeras.stream()
+                    .filter(h -> Objects.equals(h.getId(), heladera.getId()))
+                    .findFirst();
+
+            existingHeladera.ifPresentOrElse(
+                    existing -> {
+                        int index = ((List<Heladera>) this.heladeras).indexOf(existing);
+                        ((List<Heladera>) this.heladeras).set(index, heladera);
+                    },
+                    () -> {
+                        this.heladeras.add(heladera);
+                    }
+            );
         }
+
         return heladera;
     }
+
 
     public Heladera findById(Integer id) {
         Optional<Heladera> first = this.heladeras.stream().filter(x -> x.getId().equals(id)).findFirst();
