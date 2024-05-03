@@ -28,6 +28,9 @@ public class Heladera {
     // Es necesario que el sistema conozca la ultima temperatura registrada...
     private Float ultimaTemperaturaRegistrada;
 
+    private LocalDateTime ultimaApertura;
+    private Movimientos ultimoMovimiento;
+
     // Ver como se instancia esto mas adelante
     public Heladera(
             Integer id,
@@ -37,8 +40,10 @@ public class Heladera {
         this.nombre = nombre;
         this.cantidadDeViandas = 0;
         this.fechaDeFuncionamiento = LocalDateTime.now();
-        this.estadoOperacional = false;
-        this.ultimaTemperaturaRegistrada = (float) 0;
+        this.estadoOperacional = true;
+        this.ultimaTemperaturaRegistrada = null;
+        this.ultimaApertura = null;
+        this.ultimoMovimiento = Movimientos.SIN_MOVIMIENTOS;
     }
 
 }

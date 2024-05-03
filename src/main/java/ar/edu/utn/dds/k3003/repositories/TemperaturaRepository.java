@@ -27,6 +27,7 @@ public class TemperaturaRepository {
         return temperatura;
     }
 
+    // a lineas futuras, podría mejorar este metodo para que sea un poco mas declarativo y funcional
     public List<Temperatura> findByHeladeraId(Integer idHeladera) {
         List<Temperatura> temperaturasById = this.temperaturas.stream()
                 .filter(x -> x.getHeladeraId().equals(idHeladera))

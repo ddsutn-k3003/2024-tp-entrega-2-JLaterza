@@ -3,11 +3,13 @@ package ar.edu.utn.dds.k3003.app;
 import ar.edu.utn.dds.k3003.facades.FachadaViandas;
 import ar.edu.utn.dds.k3003.facades.dtos.*;
 import ar.edu.utn.dds.k3003.model.Heladera;
+import ar.edu.utn.dds.k3003.model.Movimientos;
 import ar.edu.utn.dds.k3003.repositories.HeladeraRepository;
 import ar.edu.utn.dds.k3003.repositories.HeladeraMapper;
 import ar.edu.utn.dds.k3003.repositories.TemperaturaMapper;
 import ar.edu.utn.dds.k3003.repositories.TemperaturaRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -43,6 +45,8 @@ public class Fachada implements ar.edu.utn.dds.k3003.facades.FachadaHeladeras{
         }else{
             Heladera heladera = heladeraRepository.findById(heladeraId);
             heladera.setCantidadDeViandas(heladera.getCantidadDeViandas()+1);
+            heladera.setUltimaApertura(LocalDateTime.now());
+            heladera.setUltimoMovimiento(Movimientos.DEPOSITO);
             heladeraRepository.save(heladera);
             fachadaViandas.modificarEstado(qrVianda, EstadoViandaEnum.DEPOSITADA);
         }
@@ -60,6 +64,8 @@ public class Fachada implements ar.edu.utn.dds.k3003.facades.FachadaHeladeras{
         }else{
             Heladera heladera = heladeraRepository.findById(retiro.getHeladeraId());
             heladera.setCantidadDeViandas(heladera.getCantidadDeViandas()-1);
+            heladera.setUltimaApertura(LocalDateTime.now());
+            heladera.setUltimoMovimiento(Movimientos.RETIRO);
             heladeraRepository.save(heladera);
             fachadaViandas.modificarEstado(retiro.getQrVianda(), EstadoViandaEnum.RETIRADA);
         }
