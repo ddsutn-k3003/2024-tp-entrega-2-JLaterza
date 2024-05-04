@@ -21,7 +21,7 @@ public class Heladera {
     // Sin embargo el peso de las mismas puede variar como se aclaró en la sección correspondiente.
     private Integer cantidadDeViandas;
 
-    private LocalDateTime fechaDeFuncionamiento;
+    private final LocalDateTime fechaDeFuncionamiento;
 
     private Boolean estadoOperacional;
 

@@ -8,12 +8,16 @@ import ar.edu.utn.dds.k3003.repositories.HeladeraRepository;
 import ar.edu.utn.dds.k3003.repositories.HeladeraMapper;
 import ar.edu.utn.dds.k3003.repositories.TemperaturaMapper;
 import ar.edu.utn.dds.k3003.repositories.TemperaturaRepository;
+import lombok.Getter;
+
+import ar.edu.utn.dds.k3003.facades.dtos.EstadoViandaEnum;
+import ar.edu.utn.dds.k3003.facades.dtos.ViandaDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-
+@Getter
 public class Fachada implements ar.edu.utn.dds.k3003.facades.FachadaHeladeras{
 
     private final HeladeraMapper heladeraMapper;
@@ -24,7 +28,7 @@ public class Fachada implements ar.edu.utn.dds.k3003.facades.FachadaHeladeras{
 
     private FachadaViandas fachadaViandas;
 
-    private Fachada(){
+    public Fachada(){
         this.heladeraRepository = new HeladeraRepository();
         this.heladeraMapper = new HeladeraMapper();
         this.temperaturaMapper = new TemperaturaMapper();
@@ -35,21 +39,18 @@ public class Fachada implements ar.edu.utn.dds.k3003.facades.FachadaHeladeras{
     public HeladeraDTO agregar(HeladeraDTO heladeraDTO) {
         Heladera heladera = new Heladera(heladeraDTO.getId(), heladeraDTO.getNombre());
         heladera = this.heladeraRepository.save(heladera);
-        return heladeraMapper.map(heladera);
+        return this.heladeraMapper.map(heladera);
     }
 
     @Override
     public void depositar(Integer heladeraId, String qrVianda) throws NoSuchElementException {
-        if(fachadaViandas.buscarXQR(qrVianda).getEstado() != EstadoViandaEnum.PREPARADA){
-            System.out.println("La vianda buscada no esta en estado preparada...");
-        }else{
-            Heladera heladera = heladeraRepository.findById(heladeraId);
-            heladera.setCantidadDeViandas(heladera.getCantidadDeViandas()+1);
-            heladera.setUltimaApertura(LocalDateTime.now());
-            heladera.setUltimoMovimiento(Movimientos.DEPOSITO);
-            heladeraRepository.save(heladera);
-            fachadaViandas.modificarEstado(qrVianda, EstadoViandaEnum.DEPOSITADA);
-        }
+        Heladera heladera = this.heladeraRepository.findById(heladeraId);
+        ViandaDTO viandaDTO = this.fachadaViandas.buscarXQR(qrVianda);
+        heladera.setCantidadDeViandas(heladera.getCantidadDeViandas()+1);
+        heladera.setUltimaApertura(LocalDateTime.now());
+        heladera.setUltimoMovimiento(Movimientos.DEPOSITO);
+        this.heladeraRepository.modifyHeladera(heladera);
+        this.fachadaViandas.modificarEstado(viandaDTO.getCodigoQR(), EstadoViandaEnum.DEPOSITADA);
     }
 
     @Override
@@ -59,16 +60,13 @@ public class Fachada implements ar.edu.utn.dds.k3003.facades.FachadaHeladeras{
 
     @Override
     public void retirar(RetiroDTO retiro) throws NoSuchElementException {
-        if(fachadaViandas.buscarXQR(retiro.getQrVianda()).getEstado() != EstadoViandaEnum.DEPOSITADA){
-            System.out.println("La vianda no se puede retirar por no estar depositada...");
-        }else{
-            Heladera heladera = heladeraRepository.findById(retiro.getHeladeraId());
-            heladera.setCantidadDeViandas(heladera.getCantidadDeViandas()-1);
-            heladera.setUltimaApertura(LocalDateTime.now());
-            heladera.setUltimoMovimiento(Movimientos.RETIRO);
-            heladeraRepository.save(heladera);
-            fachadaViandas.modificarEstado(retiro.getQrVianda(), EstadoViandaEnum.RETIRADA);
-        }
+        Heladera heladera = this.heladeraRepository.findById(retiro.getHeladeraId());
+        ViandaDTO viandaDTO = this.fachadaViandas.buscarXQR(retiro.getQrVianda());
+        heladera.setCantidadDeViandas(heladera.getCantidadDeViandas()-1);
+        heladera.setUltimaApertura(LocalDateTime.now());
+        heladera.setUltimoMovimiento(Movimientos.RETIRO);
+        this.heladeraRepository.modifyHeladera(heladera);
+        this.fachadaViandas.modificarEstado(viandaDTO.getCodigoQR(), EstadoViandaEnum.RETIRADA);
     }
 
     @Override
