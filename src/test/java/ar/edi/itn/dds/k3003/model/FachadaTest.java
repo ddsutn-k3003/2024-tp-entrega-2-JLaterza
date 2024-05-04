@@ -73,7 +73,6 @@ public class FachadaTest {
     @Test
     @DisplayName("Retirar viandas")
     void testRetirarViandas() {
-        // Configuración inicial
         String qr1 = "Vale por una empanada";
         String qr2 = "Vale por un sánguche";
         String qr3 = "Vale por una milanesa";
@@ -87,15 +86,12 @@ public class FachadaTest {
         instancia.depositar(HELADERA_ID, qr2);
         instancia.depositar(HELADERA_ID, qr3);
 
-        // Ejecución del método a probar
         instancia.retirar(new RetiroDTO(qr1, "14L", HELADERA_ID));
         instancia.retirar(new RetiroDTO(qr2, "14L", HELADERA_ID));
         instancia.retirar(new RetiroDTO(qr3, "14L", HELADERA_ID));
 
-        // Verificaciones
         verify(viandas, times(3)).modificarEstado(anyString(), eq(EstadoViandaEnum.RETIRADA));
 
-        // Aserciones finales
         assertEquals(0, instancia.cantidadViandas(HELADERA_ID), "Las viandas no se retiraron correctamente");
     }
 
@@ -164,7 +160,6 @@ public class FachadaTest {
     @Test
     @DisplayName("Validar cantidad de viandas en heladeras distintas")
     void testCantidadViandasEnHeladerasDistintas() {
-
         Integer segundaHeladeraId = 8934;
         String qrViandaEnHeladeraPrincipal = "Dame";
         String qrOtraViandaEnHeladeraPrincipal = "Una";
