@@ -8,6 +8,8 @@ public class HeladeraMapper {
     public HeladeraDTO map(Heladera heladera){
         HeladeraDTO heladeraDTO = new HeladeraDTO(heladera.getNombre());
         heladeraDTO.setId(heladera.getId());
+        heladeraDTO.setCantidadDeViandas(heladera.getCantidadDeViandas());
         return heladeraDTO;
     }
+
 }

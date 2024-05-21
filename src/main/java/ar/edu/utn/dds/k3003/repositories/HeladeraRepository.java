@@ -42,6 +42,11 @@ public class HeladeraRepository {
         return heladeras.size();
     }
 
+    public Boolean existHeladera(Integer heladeraId){
+        return heladeras.stream()
+                .anyMatch(heladera -> Objects.equals(heladera.getId(), heladeraId));
+    }
+
     public void modifyHeladera(Heladera heladera) {
         Objects.requireNonNull(heladera.getId(), "El ID de la heladera no puede ser nulo");
 

@@ -42,6 +42,12 @@ public class Fachada implements ar.edu.utn.dds.k3003.facades.FachadaHeladeras{
         return this.heladeraMapper.map(heladera);
     }
 
+    // Nuevo segunda entrega !
+    public HeladeraDTO buscarXId(Integer heladeraId) throws NoSuchElementException{
+        Heladera heladera = this.heladeraRepository.findById(heladeraId);
+        return this.heladeraMapper.map(heladera);
+    }
+
     @Override
     public void depositar(Integer heladeraId, String qrVianda) throws NoSuchElementException {
         Heladera heladera = this.heladeraRepository.findById(heladeraId);
@@ -61,26 +67,40 @@ public class Fachada implements ar.edu.utn.dds.k3003.facades.FachadaHeladeras{
     @Override
     public void retirar(RetiroDTO retiro) throws NoSuchElementException {
         Heladera heladera = this.heladeraRepository.findById(retiro.getHeladeraId());
-        ViandaDTO viandaDTO = this.fachadaViandas.buscarXQR(retiro.getQrVianda());
-        heladera.setCantidadDeViandas(heladera.getCantidadDeViandas()-1);
-        heladera.setUltimaApertura(LocalDateTime.now());
-        heladera.setUltimoMovimiento(Movimientos.RETIRO);
-        this.heladeraRepository.modifyHeladera(heladera);
-        this.fachadaViandas.modificarEstado(viandaDTO.getCodigoQR(), EstadoViandaEnum.RETIRADA);
+
+        // Segunda entrega por si alguien quiere retirar una vianda ya retirada con el cliente
+        if(heladera.getCantidadDeViandas()>0){
+            ViandaDTO viandaDTO = this.fachadaViandas.buscarXQR(retiro.getQrVianda());
+            heladera.setCantidadDeViandas(heladera.getCantidadDeViandas()-1);
+            heladera.setUltimaApertura(LocalDateTime.now());
+            heladera.setUltimoMovimiento(Movimientos.RETIRO);
+            this.heladeraRepository.modifyHeladera(heladera);
+            this.fachadaViandas.modificarEstado(viandaDTO.getCodigoQR(), EstadoViandaEnum.RETIRADA);
+        }else{
+            throw new NoSuchElementException("No existen viandas en la heladera");
+        }
     }
 
     @Override
     public void temperatura(TemperaturaDTO temperatura) {
-        this.temperaturaRepository.save(
-                this.temperaturaMapper.map(temperatura)
-        );
+        if (heladeraRepository.existHeladera(temperatura.getHeladeraId())) {
+            this.temperaturaRepository.save(
+                    this.temperaturaMapper.map(temperatura)
+            );
+        } else {
+            throw new NoSuchElementException("La heladera con Id " + temperatura.getHeladeraId() + " no existe.");
+        }
     }
 
     @Override
     public List<TemperaturaDTO> obtenerTemperaturas(Integer heladeraId) {
-        return this.temperaturaMapper.convertirATemperaturasDTO(
-                this.temperaturaRepository.findByHeladeraId(heladeraId)
-        );
+        if (heladeraRepository.existHeladera(heladeraId)) {
+            return this.temperaturaMapper.convertirATemperaturasDTO(
+                    this.temperaturaRepository.findByHeladeraId(heladeraId)
+            );
+        } else {
+            throw new NoSuchElementException("La heladera con Id " + heladeraId + " no existe.");
+        }
     }
 
     @Override
