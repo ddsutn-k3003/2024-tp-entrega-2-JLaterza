@@ -1,4 +1,4 @@
-package ar.edi.itn.dds.k3003.model;
+package ar.edu.utn.dds.k3003.model;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -6,6 +6,7 @@ import static org.mockito.Mockito.*;
 import ar.edu.utn.dds.k3003.app.Fachada;
 import ar.edu.utn.dds.k3003.facades.FachadaViandas;
 import ar.edu.utn.dds.k3003.facades.dtos.*;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,10 +39,10 @@ public class FachadaTest {
     @Test
     @DisplayName("Agregar heladeras")
     void agregarHeladeras(){
-        instancia.agregar(new HeladeraDTO(HELADERA_ID, NOMBRE_HELADERA));
-        instancia.agregar(new HeladeraDTO(123, "Heladera falsa"));
-        instancia.agregar(new HeladeraDTO(234, "Hola, soy una heladera"));
-        instancia.agregar(new HeladeraDTO(null, "Pedro"));
+        instancia.agregar(new HeladeraDTO(HELADERA_ID, NOMBRE_HELADERA,0));
+        instancia.agregar(new HeladeraDTO(123, "Heladera falsa",0));
+        instancia.agregar(new HeladeraDTO(234, "Hola, soy una heladera",0));
+        instancia.agregar(new HeladeraDTO(null, "Pedro",0));
 
         assertEquals(4, instancia.getHeladeraRepository().cantidadDeHeladeras(), "No se agregaron correctamente las 4 heladeras");
     }
@@ -49,17 +50,17 @@ public class FachadaTest {
     @Test
     @DisplayName("Agregar heladeras con el mismo Id")
     void agregarHeladeraConMismoId(){
-        instancia.agregar(new HeladeraDTO(HELADERA_ID, NOMBRE_HELADERA));
+        instancia.agregar(new HeladeraDTO(HELADERA_ID, NOMBRE_HELADERA,0));
 
         assertEquals(1, instancia.getHeladeraRepository().cantidadDeHeladeras(), "Se agregó una heladera correctamente");
 
-        assertThrows(IllegalArgumentException.class, () -> instancia.agregar(new HeladeraDTO(HELADERA_ID, "Soy una mentira")), "No se lanzó la excepción esperada");
+        assertThrows(IllegalArgumentException.class, () -> instancia.agregar(new HeladeraDTO(HELADERA_ID, "Soy una mentira",0)), "No se lanzó la excepción esperada");
     }
 
     @Test
     @DisplayName("Depositar vianda válida en una heladera válida")
     void testDepositarVianda() {
-        instancia.agregar(new HeladeraDTO(HELADERA_ID, NOMBRE_HELADERA));
+        instancia.agregar(new HeladeraDTO(HELADERA_ID, NOMBRE_HELADERA,0));
 
         when(viandas.buscarXQR(qr1)).thenReturn(new ViandaDTO(qr1, LocalDateTime.now(), EstadoViandaEnum.PREPARADA, 14L, HELADERA_ID));
 
@@ -81,7 +82,7 @@ public class FachadaTest {
         when(viandas.buscarXQR(qr2)).thenReturn(new ViandaDTO(qr2, LocalDateTime.now(), EstadoViandaEnum.PREPARADA, 15L, HELADERA_ID));
         when(viandas.buscarXQR(qr3)).thenReturn(new ViandaDTO(qr3, LocalDateTime.now(), EstadoViandaEnum.PREPARADA, 15L, HELADERA_ID));
 
-        instancia.agregar(new HeladeraDTO(HELADERA_ID, NOMBRE_HELADERA));
+        instancia.agregar(new HeladeraDTO(HELADERA_ID, NOMBRE_HELADERA,0));
         instancia.depositar(HELADERA_ID, qr1);
         instancia.depositar(HELADERA_ID, qr2);
         instancia.depositar(HELADERA_ID, qr3);
@@ -98,7 +99,7 @@ public class FachadaTest {
     @Test
     @DisplayName("Guardar temperaturas")
     void testGuardarTemperaturas() {
-        instancia.agregar(new HeladeraDTO(HELADERA_ID, NOMBRE_HELADERA));
+        instancia.agregar(new HeladeraDTO(HELADERA_ID, NOMBRE_HELADERA,0));
 
         instancia.temperatura(new TemperaturaDTO(64, HELADERA_ID, LocalDateTime.now()));
         instancia.temperatura(new TemperaturaDTO(89, HELADERA_ID, LocalDateTime.now()));
@@ -116,7 +117,7 @@ public class FachadaTest {
     @Test
     @DisplayName("Obtener temperaturas")
     void testObtenerTemperaturas() {
-        instancia.agregar(new HeladeraDTO(HELADERA_ID, NOMBRE_HELADERA));
+        instancia.agregar(new HeladeraDTO(HELADERA_ID, NOMBRE_HELADERA,0));
 
         instancia.temperatura(new TemperaturaDTO(64, HELADERA_ID, LocalDateTime.now()));
         instancia.temperatura(new TemperaturaDTO(89, HELADERA_ID, LocalDateTime.now()));
@@ -135,7 +136,7 @@ public class FachadaTest {
     @Test
     @DisplayName("Depositar viandas no preparadas")
     void testDepositarViandasNoValidas() {
-        instancia.agregar(new HeladeraDTO(HELADERA_ID, NOMBRE_HELADERA));
+        instancia.agregar(new HeladeraDTO(HELADERA_ID, NOMBRE_HELADERA,0));
 
         long colaboradorId = 14L;
 
@@ -172,8 +173,8 @@ public class FachadaTest {
         when(viandas.buscarXQR(qrTerceraViandaEnHeladeraPrincipal)).thenReturn(new ViandaDTO(qrTerceraViandaEnHeladeraPrincipal, LocalDateTime.now(), EstadoViandaEnum.PREPARADA, colaboradorId, HELADERA_ID));
         when(viandas.buscarXQR(qrViandaEnSegundaHeladera)).thenReturn(new ViandaDTO(qrViandaEnSegundaHeladera, LocalDateTime.now(), EstadoViandaEnum.PREPARADA, colaboradorId, segundaHeladeraId));
 
-        instancia.agregar(new HeladeraDTO(HELADERA_ID, NOMBRE_HELADERA));
-        instancia.agregar(new HeladeraDTO(segundaHeladeraId, "Soy una heladera"));
+        instancia.agregar(new HeladeraDTO(HELADERA_ID, NOMBRE_HELADERA,0));
+        instancia.agregar(new HeladeraDTO(segundaHeladeraId, "Soy una heladera",0));
         instancia.depositar(HELADERA_ID, qrViandaEnHeladeraPrincipal);
         instancia.depositar(HELADERA_ID, qrOtraViandaEnHeladeraPrincipal);
         instancia.depositar(HELADERA_ID, qrTerceraViandaEnHeladeraPrincipal);
