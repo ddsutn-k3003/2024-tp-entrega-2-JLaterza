@@ -2,7 +2,7 @@ package ar.edu.utn.dds.k3003.presentation;
 
 import ar.edu.utn.dds.k3003.app.Fachada;
 import ar.edu.utn.dds.k3003.facades.dtos.RetiroDTO;
-import ar.edu.utn.dds.k3003.facades.dtos.ViandaDTO;
+import ar.edu.utn.dds.k3003.presentation.auxiliar.ContextMappers.ViandaDTOMapper;
 import ar.edu.utn.dds.k3003.presentation.auxiliar.ErrorResponse;
 import io.javalin.http.Context;
 import io.javalin.http.HttpStatus;
@@ -12,14 +12,16 @@ import java.util.NoSuchElementException;
 public class ViandasController {
 
     private Fachada fachada;
+    private ViandaDTOMapper viandaDTOMapper;
 
     public ViandasController(Fachada fachada){
         this.fachada = fachada;
+        this.viandaDTOMapper = new ViandaDTOMapper();
     }
 
     public void depositar(Context ctx) {
         try {
-            var viandaDTO = ctx.bodyAsClass(ViandaDTO.class);
+            var viandaDTO = viandaDTOMapper.mapper(ctx);
             this.fachada.depositar(viandaDTO.getHeladeraId(), viandaDTO.getCodigoQR());
             ctx.status(HttpStatus.OK);
             ctx.result("Vianda depositada correctamente");
