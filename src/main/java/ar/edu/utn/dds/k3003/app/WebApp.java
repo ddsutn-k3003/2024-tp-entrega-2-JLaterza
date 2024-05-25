@@ -23,9 +23,8 @@ public class WebApp {
         var env = System.getenv();
         Fachada fachada = new Fachada();
 
-        // No mockeo el proxy.
-        //var objectMapper = createObjectMapper();
-        //fachada.setViandasProxy(new ViandasProxy(objectMapper));
+        var objectMapper = createObjectMapper();
+        fachada.setViandasProxy(new ViandasProxy(objectMapper));
 
         var port = Integer.parseInt(env.getOrDefault("PORT", "8080"));
 
@@ -52,14 +51,11 @@ public class WebApp {
 
     }
 
-    // Mockeo el objectMapper para la segunda entrega
-/*
     public static ObjectMapper createObjectMapper() {
         var objectMapper = new ObjectMapper();
         configureObjectMapper(objectMapper);
         return objectMapper;
     }
-*/
 
     public static void configureObjectMapper(ObjectMapper objectMapper) {
         objectMapper.registerModule(new JavaTimeModule());
