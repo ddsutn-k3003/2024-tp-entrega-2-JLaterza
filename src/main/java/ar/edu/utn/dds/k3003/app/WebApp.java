@@ -49,6 +49,7 @@ public class WebApp {
         app.post("/temperaturas", temperaturasController::registrarTemperatura);
         app.get("/heladeras/{heladeraId}/temperaturas", temperaturasController::obtenerTemperaturas);
 
+        app.get("/", ctx -> ctx.result("Hola, deberías fijarte de conectarte con un cliente HTTP antes que venir acá"));
     }
 
     public static ObjectMapper createObjectMapper() {
