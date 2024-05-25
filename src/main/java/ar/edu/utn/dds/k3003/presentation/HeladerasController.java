@@ -18,39 +18,41 @@ public class HeladerasController {
 
     public void agregar(Context ctx) {
         try {
-            var heladeraDTO = ctx.bodyAsClass(HeladeraDTO.class);
-            var heladeraDTOResponse = this.fachada.agregar(heladeraDTO);
-            ctx.json(heladeraDTOResponse);
+            ctx.json( // 3° Retorno el json con el DTO
+                    this.fachada.agregar( // 2° Debería poder agregar esa heladeraDTO a la fachada
+                            ctx.bodyAsClass(HeladeraDTO.class) // 1° Parseo el body del ctx a HeladeraDTO
+                    )
+            );
             ctx.status(HttpStatus.CREATED);
         }catch(IllegalArgumentException e) {
             ctx.status(HttpStatus.BAD_REQUEST);
-            ErrorResponse errorResponse = new ErrorResponse(0, e.getMessage());
-            ctx.json(errorResponse);
+            ctx.json(new ErrorResponse(1, e.getMessage()));
         }catch (Exception e) {
             ctx.status(HttpStatus.INTERNAL_SERVER_ERROR);
-            ErrorResponse errorResponse = new ErrorResponse(1, "Ups, hubo un error en el endpoint agregar: "+e);
-            ctx.json(errorResponse);
+            ctx.json(new ErrorResponse(99, "Ups, hubo un error en el endpoint agregar: "+e));
         }
     }
 
     public void buscarXId(Context ctx) {
-        var heladeraId = ctx.pathParamAsClass("heladeraId", Integer.class).get();
         try {
-            var heladeraDTOResponse = this.fachada.buscarXId(heladeraId);
-            ctx.json(heladeraDTOResponse);
+            ctx.json(
+                    this.fachada.buscarXId(
+                            ctx.pathParamAsClass("heladeraId", Integer.class).get()
+                    )
+            );
             ctx.status(HttpStatus.OK);
         }catch(NoSuchElementException e) {
             ctx.status(HttpStatus.NOT_FOUND);
-            ErrorResponse errorResponse = new ErrorResponse(0, e.getMessage());
-            ctx.json(errorResponse);
+            ctx.json(new ErrorResponse(0, e.getMessage()));
         }catch(IllegalArgumentException e) {
             ctx.status(HttpStatus.BAD_REQUEST);
-            ErrorResponse errorResponse = new ErrorResponse(0, e.getMessage());
-            ctx.json(errorResponse);
+            ctx.json(new ErrorResponse(1, e.getMessage()));
+        }catch(io.javalin.validation.ValidationException e){
+            ctx.status(HttpStatus.BAD_REQUEST);
+            ctx.json(new ErrorResponse(2, "Se envio un valor no valido como Id"));
         }catch (Exception e) {
             ctx.status(HttpStatus.INTERNAL_SERVER_ERROR);
-            ErrorResponse errorResponse = new ErrorResponse(1, "Ups, hubo un error en el endpoint buscarXId: "+e);
-            ctx.json(errorResponse);
+            ctx.json(new ErrorResponse(99, "Ups, hubo un error en el endpoint buscarXId: "+e));
         }
     }
 

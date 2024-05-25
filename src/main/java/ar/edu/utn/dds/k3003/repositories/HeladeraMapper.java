@@ -6,10 +6,19 @@ import ar.edu.utn.dds.k3003.model.Heladera;
 public class HeladeraMapper {
 
     public HeladeraDTO map(Heladera heladera){
-        HeladeraDTO heladeraDTO = new HeladeraDTO(heladera.getNombre());
-        heladeraDTO.setId(heladera.getId());
-        heladeraDTO.setCantidadDeViandas(heladera.getCantidadDeViandas());
-        return heladeraDTO;
+        return new HeladeraDTO(
+                heladera.getId(),
+                heladera.getNombre(),
+                heladera.getCantidadDeViandas()
+        );
+    }
+
+    public Heladera map(HeladeraDTO heladeraDTO){
+        return new Heladera(
+                heladeraDTO.getId(),
+                heladeraDTO.getNombre(),
+                heladeraDTO.getCantidadDeViandas()
+        );
     }
 
 }
